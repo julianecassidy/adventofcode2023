@@ -2,7 +2,6 @@
 
 const os = require("os");
 const fs = require('fs/promises');
-const { DiffieHellman } = require("crypto");
 
 const DIGIT_STRINGS = {
     one: 1,
@@ -36,7 +35,10 @@ Consider your entire calibration document. What is the sum of all of the
 calibration values?
 */
 
-/** sumCalibrationValues:  */
+/** sumCalibrationValues: given a filepath containing lines of strings, interate
+ * through the lines and return the sum of the two digit numbers represented by 
+ * the first digit from the left and last digit from the left in each line. 
+ */
 async function sumCalibrationValues(filepath) {
     const file = await fs.readFile(filepath, "utf-8");
     const fileLines = getLinesFromString(file);
@@ -47,7 +49,6 @@ async function sumCalibrationValues(filepath) {
         (accumulator, currentValue) => accumulator + currentValue, 0,
     );
 }
-
 
 /** getLinesFromString: Takes string input.
  * Returns an array containing each non-empty line of file as an element.
