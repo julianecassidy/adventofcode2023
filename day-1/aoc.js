@@ -2,6 +2,19 @@
 
 const os = require("os");
 const fs = require('fs/promises');
+const { DiffieHellman } = require("crypto");
+
+const DIGIT_STRINGS = {
+    one: 1,
+    two: 2,
+    three: 3,
+    four: 4,
+    five: 5,
+    six: 6,
+    seven: 7,
+    eight: 8,
+    nine: 9
+} 
 
 /* Problem: The newly-improved calibration document consists of lines of text;
 each line originally contained a specific calibration value that the Elves now
@@ -52,37 +65,99 @@ function getLinesFromString(string) {
   }
 
 /** extractNum: in the inputted string, find the first occuring number and last
- * occuring number. These may be the same. Return an integer with the first
- * numbre in the tens place and the last number in the ones place:
+ * occuring number in in integer or sting format. These may be the same. Return
+ * an integer with the first number in the tens place and the last number in the
+ * ones place:
  * "1abc2" --> 12
  * "a1b2c3d4e5f" --> 15
- * "treb7uchet" --> 77
-*/
+ * "two1nine" --> 29
+ * "abcone2threexyz" -> 13
+ */
 function extractNum(string) {
     let first;
     let last;
 
     // find first number from left
-    let idx = 0;
-    while (first === undefined && idx <= string.length) {
-        if (!isNaN(Number(string[idx]))) {
-            first = string[idx];
+    firstNum:
+    for (let i = 0; i < string.length; i++) {
+        // check for number in number format
+        if (!isNaN(Number(string[i])) ) {
+            first = string[i];
+            break firstNum;
         }
-        idx++;
+
+        // check for number in string format
+        let currSubstring = string[i];
+
+        for (let j = i + 1; j < string.length; j++) {
+            if (currSubstring in DIGIT_STRINGS) {
+                first = DIGIT_STRINGS[currSubstring];
+                break firstNum;
+            } else {
+                currSubstring += string[j];
+            }
+        }
     }
 
     // find last number from left
-    idx = string.length - 1;
-    while (last === undefined) {
-        if (!isNaN(Number(string[idx]))) {
-            last = string[idx];
+    secondNum:
+    for (let i = string.length - 1; i >= 0; i--) {
+        // check for number in number format
+        if (!isNaN(Number(string[i]))) {
+            last = string[i];
+            break secondNum;
         }
-        idx--;
+
+        // check for number in string format
+        let currSubstring = string[i];
+
+        for (let j = i - 1; j >= 0; j--) {
+            if (currSubstring in DIGIT_STRINGS) {
+                last = DIGIT_STRINGS[currSubstring];
+                break secondNum;
+            } else {
+                currSubstring = string[j] + currSubstring;
+            }
+        }
     }
-    
-    const num = Number(`${first}${last}`);
-    return num;
+
+    return Number(`${first}${last}`);
 }
+
+
+
+/** extractNum: in the inputted string, find the first occuring number and last
+ * occuring number. These may be the same. Return an integer with the first
+ * number in the tens place and the last number in the ones place:
+ * "1abc2" --> 12
+ * "a1b2c3d4e5f" --> 15
+ * "treb7uchet" --> 77
+*/
+// function extractNum(string) {
+//     let first;
+//     let last;
+
+//     // find first number from left
+//     let idx = 0;
+//     while (first === undefined) {
+//         if (!isNaN(Number(string[idx])) ) {
+//             first = string[idx];
+//         }
+//         idx++;
+//     }
+
+//     // find last number from left
+//     idx = string.length - 1;
+//     while (last === undefined) {
+//         if (!isNaN(Number(string[idx]))) {
+//             last = string[idx];
+//         }
+//         idx--;
+//     }
+    
+//     const num = Number(`${first}${last}`);
+//     return num;
+// }
 
 
 
