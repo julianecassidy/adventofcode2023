@@ -44,7 +44,61 @@ const MAX_CUBES = {
     blue: 14
 };
 
-/** sumPossibleGameIds: 
+/** sumCubePowers: given a file path of game data, open the file, parse the
+ * data, and add together the powers of each game. */
+async function sumCubePowers(filepath) {
+    const file = await fs.readFile(filepath, "utf-8");
+    const lines = getLinesFromString(file);
+
+    let sum = 0;
+
+    for(let i = 0; i < lines.length; i++) {
+        sum += findPower(lines[i]);
+    }
+
+    return sum;
+
+}
+
+/** findPower: given a string of game details, return an integer representing
+ * the power of a game which is the minimum number of each color cubes needed
+ * for a given game multiplied */
+function findPower(game) {
+    const hands = parseLine(game);
+
+    let red = 0;
+    let green = 0;
+    let blue = 0;
+
+    for (let hand in hands) {
+        console.log("hand", hands[hand]);
+        const currHand = hands[hand]
+
+        if (currHand.red > red) {
+            red = currHand.red;
+        }
+
+        if (currHand.green > green) {
+            green = currHand.green;
+        }
+
+        if (currHand.blue > blue) {
+            blue = currHand.blue;
+        }
+    }
+
+    return red * green * blue;
+
+
+    // parse game into hands
+    // initiate variables for different color maxes
+    // iterate through hands
+        // iterate through hand
+            // determine max number for each color
+}
+
+/** sumPossibleGameIds: given a file path of game data, open the file, parse the
+data, and add together the ids of any games that are possible.
  */
 async function sumPossibleGameIds(filepath) {
     const file = await fs.readFile(filepath, "utf-8");
@@ -145,7 +199,15 @@ function getLinesFromString(string) {
   }
 
 
-module.exports = { sumPossibleGameIds, parseLine, isGamePossible, isHandPossible };
+module.exports = { 
+    sumPossibleGameIds, 
+    parseLine, 
+    isGamePossible, 
+    isHandPossible,
+    sumCubePowers,
+    findPower, 
+};
+
 
 // parse file
 // covert each line to a ...?
