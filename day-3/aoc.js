@@ -1,4 +1,4 @@
-"use strict"; 
+"use strict";
 
 const os = require("os");
 const fs = require('fs/promises');
@@ -43,7 +43,7 @@ async function sumPartNumbers(filepath) {
         console.log("sum", sum, "line", lines[i]);
         for (let j = 0; j < lines[i].length; j++) {
             let currLine = lines[i];
-            
+
             if (currLine[j] !== "." && isNaN(Number(currLine[j]))) {
                 console.log("curr char", currLine[j]);
                 let left = "";
@@ -51,14 +51,14 @@ async function sumPartNumbers(filepath) {
                 let right = "";
 
                 // check top left
-                if(i !== 0 && !(isNaN(Number(lines[i - 1][j - 1])))) {
+                if (i !== 0 && !(isNaN(Number(lines[i - 1][j - 1])))) {
                     // find start of number
                     let idx = j - 1;
-                    while(!(isNaN(Number(lines[i - 1][idx])))) {
+                    while (!(isNaN(Number(lines[i - 1][idx])))) {
                         idx--
                     }
 
-                    while(!(isNaN(Number(lines[i - 1][idx + 1])))) {
+                    while (!(isNaN(Number(lines[i - 1][idx + 1])))) {
                         left += lines[i - 1][idx + 1];
                         idx++
                     }
@@ -66,10 +66,10 @@ async function sumPartNumbers(filepath) {
                 }
 
                 // check top middle
-                if(i !== 0 && !(isNaN(Number(lines[i - 1][j]))) && !left) {
+                if (i !== 0 && !(isNaN(Number(lines[i - 1][j]))) && !left) {
 
                     let idx = j;
-                    while(!(isNaN(Number(lines[i - 1][idx])))) {
+                    while (!(isNaN(Number(lines[i - 1][idx])))) {
                         middle += lines[i - 1][idx];
                         idx++;
                     }
@@ -77,15 +77,15 @@ async function sumPartNumbers(filepath) {
                 }
 
                 // check top right
-                if(
-                    i !== 0 
-                    && !(isNaN(Number(lines[i - 1][j + 1]))) 
+                if (
+                    i !== 0
+                    && !(isNaN(Number(lines[i - 1][j + 1])))
                     && !middle
                     && isNaN(Number(lines[i - 1][j]))
                 ) {
 
                     let idx = j + 1;
-                    while(!(isNaN(Number(lines[i - 1][idx])))) {
+                    while (!(isNaN(Number(lines[i - 1][idx])))) {
                         right += lines[i - 1][idx];
                         idx++;
                     }
@@ -97,28 +97,28 @@ async function sumPartNumbers(filepath) {
                 left = "";
                 middle = "";
                 right = "";
-                
+
                 // check left
-                if(!(isNaN(Number(lines[i][j - 1])))) {
+                if (!(isNaN(Number(lines[i][j - 1])))) {
 
                     // find start of number
                     let idx = j - 1;
-                    while(!(isNaN(Number(lines[i][idx])))) {
+                    while (!(isNaN(Number(lines[i][idx])))) {
                         idx--
                     }
 
-                    while(!(isNaN(Number(lines[i][idx + 1])))) {
+                    while (!(isNaN(Number(lines[i][idx + 1])))) {
                         left += lines[i][idx + 1];
                         idx++
                     }
                     console.log("left", left);
-                }                
+                }
 
                 // check right
-                if(!(isNaN(Number(lines[i][j + 1])))) {
+                if (!(isNaN(Number(lines[i][j + 1])))) {
 
                     let idx = j + 1;
-                    while(!(isNaN(Number(lines[i][idx])))) {
+                    while (!(isNaN(Number(lines[i][idx])))) {
                         right += lines[i][idx];
                         idx++;
                     }
@@ -130,15 +130,15 @@ async function sumPartNumbers(filepath) {
                 right = "";
 
                 // check bottom left
-                if(i !== lines.length - 1 && !(isNaN(Number(lines[i + 1][j - 1])))) {
+                if (i !== lines.length - 1 && !(isNaN(Number(lines[i + 1][j - 1])))) {
 
                     // find start of number
                     let idx = j - 1;
-                    while(!(isNaN(Number(lines[i + 1][idx])))) {
+                    while (!(isNaN(Number(lines[i + 1][idx])))) {
                         idx--
                     }
 
-                    while(!(isNaN(Number(lines[i + 1][idx + 1])))) {
+                    while (!(isNaN(Number(lines[i + 1][idx + 1])))) {
                         left += lines[i + 1][idx + 1];
                         idx++
                     }
@@ -146,10 +146,10 @@ async function sumPartNumbers(filepath) {
                 }
 
                 // check bottom middle
-                if(i !== lines.length - 1 && !(isNaN(Number(lines[i + 1][j])))) {
+                if (i !== lines.length - 1 && !(isNaN(Number(lines[i + 1][j])))) {
 
                     let idx = j;
-                    while(!(isNaN(Number(lines[i + 1][idx]))) && !left) {
+                    while (!(isNaN(Number(lines[i + 1][idx]))) && !left) {
                         middle += lines[i + 1][idx];
                         idx++;
                     }
@@ -157,15 +157,14 @@ async function sumPartNumbers(filepath) {
                 }
 
                 // check bottom right
-                if(
-                    i !== lines.length - 1 
-                    && !(isNaN(Number(lines[i + 1][j + 1]))) 
+                if (
+                    i !== lines.length - 1
+                    && !(isNaN(Number(lines[i + 1][j + 1])))
                     && !middle
                     && isNaN(Number(lines[i + 1][j]))
                 ) {
-
                     let idx = j + 1;
-                    while(!(isNaN(Number(lines[i + 1][idx])))) {
+                    while (!(isNaN(Number(lines[i + 1][idx])))) {
                         right += lines[i + 1][idx];
                         idx++;
                     }
@@ -180,6 +179,167 @@ async function sumPartNumbers(filepath) {
     return sum;
 }
 
+/** sumGearRatios: given a file path of part data, parse file, deterimine which
+symbols are gears (exactly two numbers attached to a *), and return the sum of
+all gear ratios.
+*/
+async function sumGearRatios(filepath) {
+    const file = await fs.readFile(filepath, "utf-8");
+    const lines = getLinesFromString(file);
+
+    let sum = 0;
+
+    for (let i = 0; i < lines.length; i++) {
+        for (let j = 0; j < lines[i].length; j++) {
+            let currLine = lines[i];
+
+            if (currLine[j] === "*") {
+                console.log("curr char", currLine[j]);
+                let nums = [];
+                let left = "";
+                let middle = "";
+                let right = "";
+
+                // check top left
+                if (i !== 0 && !(isNaN(Number(lines[i - 1][j - 1])))) {
+                    // find start of number
+                    let idx = j - 1;
+                    while (!(isNaN(Number(lines[i - 1][idx])))) {
+                        idx--
+                    }
+
+                    while (!(isNaN(Number(lines[i - 1][idx + 1])))) {
+                        left += lines[i - 1][idx + 1];
+                        idx++
+                    }
+                    console.log("top left", nums);
+                }
+
+                // check top middle
+                if (i !== 0 && !(isNaN(Number(lines[i - 1][j]))) && !left) {
+
+                    let idx = j;
+                    while (!(isNaN(Number(lines[i - 1][idx])))) {
+                        middle += lines[i - 1][idx];
+                        idx++;
+                    }
+                    console.log("top middle", middle);
+                }
+
+                // check top right
+                if (
+                    i !== 0
+                    && !(isNaN(Number(lines[i - 1][j + 1])))
+                    && !middle
+                    && isNaN(Number(lines[i - 1][j]))
+                ) {
+
+                    let idx = j + 1;
+                    while (!(isNaN(Number(lines[i - 1][idx])))) {
+                        right += lines[i - 1][idx];
+                        idx++;
+                    }
+                    console.log("top right", right);
+
+                }
+
+                if (left) nums.push(left);
+                if (middle) nums.push(middle);
+                if (right) nums.push(right);
+
+                left = "";
+                middle = "";
+                right = "";
+
+                // check left
+                if (!(isNaN(Number(lines[i][j - 1])))) {
+
+                    // find start of number
+                    let idx = j - 1;
+                    while (!(isNaN(Number(lines[i][idx])))) {
+                        idx--
+                    }
+
+                    while (!(isNaN(Number(lines[i][idx + 1])))) {
+                        left += lines[i][idx + 1];
+                        idx++
+                    }
+                    console.log("left", left);
+                }
+
+                // check right
+                if (!(isNaN(Number(lines[i][j + 1])))) {
+
+                    let idx = j + 1;
+                    while (!(isNaN(Number(lines[i][idx])))) {
+                        right += lines[i][idx];
+                        idx++;
+                    }
+                    console.log("right", right);
+                }
+
+                if (left) nums.push(left);
+                if (right) nums.push(right);
+
+                left = "";
+                right = "";
+
+                // check bottom left
+                if (i !== lines.length - 1 && !(isNaN(Number(lines[i + 1][j - 1])))) {
+
+                    // find start of number
+                    let idx = j - 1;
+                    while (!(isNaN(Number(lines[i + 1][idx])))) {
+                        idx--
+                    }
+
+                    while (!(isNaN(Number(lines[i + 1][idx + 1])))) {
+                        left += lines[i + 1][idx + 1];
+                        idx++
+                    }
+                    console.log("bottom left", left);
+                }
+
+                // check bottom middle
+                if (i !== lines.length - 1 && !(isNaN(Number(lines[i + 1][j])))) {
+
+                    let idx = j;
+                    while (!(isNaN(Number(lines[i + 1][idx]))) && !left) {
+                        middle += lines[i + 1][idx];
+                        idx++;
+                    }
+                    console.log("bottom middle", middle);
+                }
+
+                // check bottom right
+                if (
+                    i !== lines.length - 1
+                    && !(isNaN(Number(lines[i + 1][j + 1])))
+                    && !middle
+                    && isNaN(Number(lines[i + 1][j]))
+                ) {
+                    let idx = j + 1;
+                    while (!(isNaN(Number(lines[i + 1][idx])))) {
+                        right += lines[i + 1][idx];
+                        idx++;
+                    }
+                    console.log("bottom right", right);
+                }
+
+                if (left) nums.push(left);
+                if (middle) nums.push(middle);
+                if (right) nums.push(right);
+
+                //check valid gear and add ratio
+                if (nums.length === 2) {
+                    sum += (nums[0] * nums[1]);
+                }
+            }
+        }
+    }
+    return sum;
+}
+
 /** getLinesFromString: Takes string input.
  * Returns an array containing each non-empty line of file as an element.
  */
@@ -189,22 +349,22 @@ function getLinesFromString(string) {
     // operating system it's running on // this ensures we always know how to
     // identify the end of a line // \n on Linux and macOS, \r\n on Windows.
     return (
-      string
-        .split(os.EOL)
-        .filter(u => u !== "")
+        string
+            .split(os.EOL)
+            .filter(u => u !== "")
     );
-  }
+}
 
 
-module.exports = { 
-    sumPartNumbers, 
-
+module.exports = {
+    sumPartNumbers,
+    sumGearRatios,
 };
 
 
 // iterate through in nested for loops
-    // in the second for loop, if the index has a symbol
-        // test all 8 adjacent spots for a number
-            // if number exists, go to left to find start of number
-            // compile all digits into a number
-            // add the number to the sum
+// in the second for loop, if the index has a symbol
+// test all 8 adjacent spots for a number
+// if number exists, go to left to find start of number
+// compile all digits into a number
+// add the number to the sum
